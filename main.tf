@@ -82,7 +82,7 @@ data "google_iam_policy" "tfe_workload_identity" {
     role = "roles/iam.workloadIdentityUser"
 
     members = [
-      "principalSet://iam.googleapis.com/projects/${data.google_project.target.number}/locations/global/workloadIdentityPools/${var.gcp_workload_identity_pool_name}/attribute.workspace_id/${tfe_workspace.workspace.id}"
+      "principalSet://iam.googleapis.com/${var.gcp_workload_identity_pool_name}/attribute.workspace_id/${tfe_workspace.workspace.id}",
     ]
   }
 }
