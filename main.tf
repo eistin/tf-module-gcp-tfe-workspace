@@ -57,6 +57,10 @@ resource "tfe_variable" "gcp_project_id" {
   SERVICE ACCOUNT / IAM
  *****************************************/
 
+data "google_project" "target" {
+  project_id = var.gcp_project_id
+}
+
 # SERVICE ACCOUNT
 resource "google_service_account" "tfe_service_account" {
   project      = var.gcp_project_id
@@ -78,7 +82,7 @@ data "google_iam_policy" "tfe_workload_identity" {
     role = "roles/iam.workloadIdentityUser"
 
     members = [
-      "principalSet://iam.googleapis.com/${var.gcp_workload_identity_pool_name}/attribute.workspace_id/${tfe_workspace.workspace.id}",
+      "principalSet://iam.googleapis.com/projects/${data.google_project.target.number}/locations/global/workloadIdentityPools/${var.gcp_workload_identity_pool_name}/attribute.workspace_id/${tfe_workspace.workspace.id}"
     ]
   }
 }
