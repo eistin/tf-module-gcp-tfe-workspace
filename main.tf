@@ -76,20 +76,9 @@ resource "google_project_iam_member" "tfe_iam_owner" {
   member  = "serviceAccount:${google_service_account.tfe_service_account.email}"
 }
 
-# IAM POLICY FOR CLOUD IDENTITY
-data "google_iam_policy" "tfe_workload_identity" {
-  binding {
-    role = "roles/iam.workloadIdentityUser"
-
-    members = [
-      "principalSet://iam.googleapis.com/${var.gcp_workload_identity_pool_name}/attribute.workspace_id/${tfe_workspace.workspace.id}",
-    ]
-  }
-}
-
-# BIND IAM POLICY TO SA
-resource "google_service_account_iam_policy" "terraform_cloud_workload_identity" {
-
+# GIVE IAM MEMBER ROLE
+resource "google_service_account_iam_member" "tfe_workloadIdentityUser_iam_member" {
   service_account_id = google_service_account.tfe_service_account.name
-  policy_data        = data.google_iam_policy.tfe_workload_identity.policy_data
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/${var.gcp_workload_identity_pool_name}/attribute.workspace_id/${tfe_workspace.workspace.id}"
 }
