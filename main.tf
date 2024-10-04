@@ -80,5 +80,5 @@ resource "google_project_iam_member" "tfe_iam_owner" {
 resource "google_service_account_iam_member" "tfe_workloadIdentityUser_iam_member" {
   service_account_id = google_service_account.tfe_service_account.name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/${var.gcp_workload_identity_pool_name}/attribute.workspace_id/${tfe_workspace.workspace.id}"
+  member             = "principalSet://iam.googleapis.com/${var.gcp_workload_identity_pool_name}/attribute.org/${var.tfe_organization}"
 }
